@@ -5,7 +5,7 @@ from PIL import Image
 import torch
 from torchvision import transforms as T
 
-class FrameImageDataset(torch.utils.data.Dataset):
+class FrameImageDataset(torch.utils.data.Dataset): # A dataset of individual, independent frames (images). To be used for aggregation of per-frame models.
     def __init__(self, 
     root_dir='/work3/ppar/data/ucf101',
     split='train', 
@@ -38,7 +38,8 @@ class FrameImageDataset(torch.utils.data.Dataset):
         return frame, label
 
 
-class FrameVideoDataset(torch.utils.data.Dataset):
+class FrameVideoDataset(torch.utils.data.Dataset): # does not load or decode the .avi videos themselves. Instead, it uses the video file names (from /videos/.../*.avi) only as references to locate pre-extracted frame folders.+
+    # A dataset of entire videos, each represented by multiple frames. Sequence (list or tensor) of frames + label.
     def __init__(self, 
     root_dir = '/work3/ppar/data/ucf101', 
     split = 'train', 
@@ -60,7 +61,7 @@ class FrameVideoDataset(torch.utils.data.Dataset):
     def _get_meta(self, attr, value):
         return self.df.loc[self.df[attr] == value]
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx): # core method, called every time the DataLoader fetches a batch. Loads and returns one video sample (frames + label) given its index. 
         video_path = self.video_paths[idx]
         video_name = video_path.split('/')[-1].split('.avi')[0]
         video_meta = self._get_meta('video_name', video_name)
