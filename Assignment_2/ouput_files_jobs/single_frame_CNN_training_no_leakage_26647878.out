@@ -1,0 +1,126 @@
+Running on host: n-62-20-12
+CUDA_VISIBLE_DEVICES: 0
+Sat Oct 25 13:00:56 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-SXM2-32GB           On  |   00000000:3A:00.0 Off |                    0 |
+| N/A   29C    P0             41W /  300W |       0MiB /  32768MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+✅ The code will run on NVIDIA GPU (CUDA).
+Epoch 1/30 Train Loss: 1.8018 | Train Acc: 36.3% Test Loss: 2.4349 | Test Acc: 28.8%
+Epoch 2/30 Train Loss: 0.9613 | Train Acc: 67.7% Test Loss: 2.9579 | Test Acc: 34.6%
+Epoch 3/30 Train Loss: 0.5521 | Train Acc: 81.9% Test Loss: 3.4029 | Test Acc: 35.3%
+Epoch 4/30 Train Loss: 0.3659 | Train Acc: 88.2% Test Loss: 3.2973 | Test Acc: 42.2%
+Epoch 5/30 Train Loss: 0.2927 | Train Acc: 90.6% Test Loss: 3.5419 | Test Acc: 38.8%
+Epoch 6/30 Train Loss: 0.2100 | Train Acc: 93.6% Test Loss: 4.4559 | Test Acc: 36.6%
+Epoch 7/30 Train Loss: 0.2041 | Train Acc: 93.5% Test Loss: 3.8577 | Test Acc: 31.4%
+Epoch 8/30 Train Loss: 0.1547 | Train Acc: 95.0% Test Loss: 3.9059 | Test Acc: 37.8%
+Epoch 9/30 Train Loss: 0.1559 | Train Acc: 95.2% Test Loss: 3.7911 | Test Acc: 39.1%
+Epoch 10/30 Train Loss: 0.1367 | Train Acc: 95.7% Test Loss: 4.3741 | Test Acc: 39.6%
+Epoch 11/30 Train Loss: 0.1303 | Train Acc: 95.7% Test Loss: 4.3208 | Test Acc: 43.7%
+Epoch 12/30 Train Loss: 0.1173 | Train Acc: 96.1% Test Loss: 5.3006 | Test Acc: 38.7%
+Epoch 13/30 Train Loss: 0.1098 | Train Acc: 96.5% Test Loss: 4.6986 | Test Acc: 35.2%
+Epoch 14/30 Train Loss: 0.0931 | Train Acc: 97.0% Test Loss: 4.3073 | Test Acc: 39.2%
+Epoch 15/30 Train Loss: 0.0881 | Train Acc: 97.3% Test Loss: 4.3278 | Test Acc: 39.9%
+Epoch 16/30 Train Loss: 0.0803 | Train Acc: 97.4% Test Loss: 4.7916 | Test Acc: 37.0%
+Epoch 17/30 Train Loss: 0.0813 | Train Acc: 97.2% Test Loss: 5.0733 | Test Acc: 35.1%
+Epoch 18/30 Train Loss: 0.0739 | Train Acc: 97.5% Test Loss: 4.9665 | Test Acc: 37.2%
+Epoch 19/30 Train Loss: 0.0730 | Train Acc: 97.8% Test Loss: 5.6559 | Test Acc: 38.0%
+Epoch 20/30 Train Loss: 0.0647 | Train Acc: 98.1% Test Loss: 5.2192 | Test Acc: 35.9%
+Epoch 21/30 Train Loss: 0.0642 | Train Acc: 97.9% Test Loss: 4.6938 | Test Acc: 37.2%
+Epoch 22/30 Train Loss: 0.0723 | Train Acc: 97.6% Test Loss: 4.6208 | Test Acc: 38.1%
+Epoch 23/30 Train Loss: 0.0652 | Train Acc: 98.1% Test Loss: 4.1901 | Test Acc: 39.1%
+Epoch 24/30 Train Loss: 0.0578 | Train Acc: 98.3% Test Loss: 4.0330 | Test Acc: 41.8%
+Epoch 25/30 Train Loss: 0.0579 | Train Acc: 98.3% Test Loss: 4.2727 | Test Acc: 38.7%
+Epoch 26/30 Train Loss: 0.0630 | Train Acc: 98.1% Test Loss: 4.7629 | Test Acc: 39.0%
+Epoch 27/30 Train Loss: 0.0401 | Train Acc: 98.8% Test Loss: 4.5318 | Test Acc: 36.5%
+Epoch 28/30 Train Loss: 0.0683 | Train Acc: 98.1% Test Loss: 4.8301 | Test Acc: 40.6%
+Epoch 29/30 Train Loss: 0.0621 | Train Acc: 98.1% Test Loss: 5.2722 | Test Acc: 33.1%
+Epoch 30/30 Train Loss: 0.0481 | Train Acc: 98.5% Test Loss: 5.4064 | Test Acc: 40.6%
+✅ Training finished.
+📊 Saved accuracy_plot.png and loss_plot.png to Assignment_2/
+✅ Model weights saved.
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 26647878: <single_frame_CNN_training> in cluster <dcc> Done
+
+Job <single_frame_CNN_training> was submitted from host <n-62-20-1> by user <s243128> in cluster <dcc> at Sat Oct 25 13:00:53 2025
+Job was executed on host(s) <4*n-62-20-12>, in queue <gpuv100>, as user <s243128> in cluster <dcc> at Sat Oct 25 13:00:55 2025
+</zhome/b4/e/214014> was used as the home directory.
+</zhome/b4/e/214014/Documents/Python/Introduction_to_Deep_Learning_for_CV/Assignments_DL_for_CV> was used as the working directory.
+Started at Sat Oct 25 13:00:55 2025
+Terminated at Sat Oct 25 13:08:57 2025
+Results reported at Sat Oct 25 13:08:57 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -J single_frame_CNN_training            # Job name
+#BSUB -q gpuv100                              # Queue to submit to (V100 GPUs)
+#BSUB -W 0:20                                 # Wall time limit (20 minutes)
+#BSUB -R "rusage[mem=5GB]"                    # Memory requirement (5GB)
+#BSUB -n 4                                    # Number of CPU cores
+#BSUB -R "span[hosts=1]"                      # All CPUs on a single host
+#BSUB -gpu "num=1:mode=exclusive_process"     # Request 1 GPU in exclusive mode
+#BSUB -o single_frame_CNN_training_no_leakage_%J.out     # Standard output file
+#BSUB -e single_frame_CNN_training_no_leakage_%J.err     # Error output file
+
+# --- Load CUDA environment (required for GPU access) ---
+module load cuda/11.8
+
+# --- Print environment info for debugging/logging ---
+echo "Running on host: $(hostname)"
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+nvidia-smi
+
+# --- Move to working directory ---
+cd ~/Documents/Python/Introduction_to_Deep_Learning_for_CV/Assignments_DL_for_CV/ || exit 1
+
+# --- Activate virtual environment ---
+source ~/Documents/Python/Introduction_to_Deep_Learning_for_CV/venv_DL_CV/bin/activate
+
+# --- Run your Python training script ---
+python Assignment_2/single_frame_CNN.py
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   478.00 sec.
+    Max Memory :                                 707 MB
+    Average Memory :                             706.33 MB
+    Total Requested Memory :                     20480.00 MB
+    Delta Memory :                               19773.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                11
+    Run time :                                   530 sec.
+    Turnaround time :                            484 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <single_frame_CNN_training_no_leakage_26647878.err> for stderr output of this job.
+
