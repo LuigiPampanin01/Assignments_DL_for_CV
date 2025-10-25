@@ -7,7 +7,7 @@ from torchvision import transforms as T
 
 class FrameImageDataset(torch.utils.data.Dataset): # A dataset of individual, independent frames (images). To be used for aggregation of per-frame models.
     def __init__(self, 
-    root_dir='/work3/ppar/data/ucf101',
+    root_dir='/dtu/datasets1/02516/ufc10',
     split='train', 
     transform=None
 ):
@@ -41,7 +41,7 @@ class FrameImageDataset(torch.utils.data.Dataset): # A dataset of individual, in
 class FrameVideoDataset(torch.utils.data.Dataset): # does not load or decode the .avi videos themselves. Instead, it uses the video file names (from /videos/.../*.avi) only as references to locate pre-extracted frame folders.+
     # A dataset of entire videos, each represented by multiple frames. Sequence (list or tensor) of frames + label.
     def __init__(self, 
-    root_dir = '/work3/ppar/data/ucf101', 
+    root_dir = '/dtu/datasets1/02516/ufc10', 
     split = 'train', 
     transform = None,
     stack_frames = True
@@ -94,7 +94,7 @@ class FrameVideoDataset(torch.utils.data.Dataset): # does not load or decode the
 if __name__ == '__main__':
     from torch.utils.data import DataLoader
 
-    root_dir = '/work3/ppar/data/ucf101'
+    root_dir = '/dtu/datasets1/02516/ufc10'
 
     transform = T.Compose([T.Resize((64, 64)),T.ToTensor()])
     frameimage_dataset = FrameImageDataset(root_dir=root_dir, split='val', transform=transform)

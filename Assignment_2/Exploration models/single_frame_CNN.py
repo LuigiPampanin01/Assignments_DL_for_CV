@@ -5,6 +5,10 @@ import torch.nn as nn
 import torch
 import torch.optim as optim
 from tqdm import tqdm
+from torch.utils.tensorboard import SummaryWriter
+import json
+
+writer = SummaryWriter(log_dir="runs/single_frame")
 
 # ---------------- DEVICE SETUP ----------------
 if torch.cuda.is_available():
@@ -18,7 +22,7 @@ else:
     print("⚠️ The code will run on CPU.")
 
 # ---------------- DATASETS ----------------
-root_dir = '/work3/ppar/data/ucf101'
+root_dir = '/dtu/datasets1/02516/ufc10'
 transform = T.Compose([
     T.Resize((64, 64)),
     T.ToTensor(),
@@ -148,9 +152,25 @@ for epoch in range(num_epochs):
     print(f"Epoch {epoch+1}/{num_epochs} "
           f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc*100:.1f}% "
           f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc*100:.1f}%")
+    writer.add_scalar("Train/Loss", train_loss, epoch)
+    writer.add_scalar("Train/Accuracy", train_acc, epoch)
+    writer.add_scalar("Test/Loss", test_loss, epoch)
+    writer.add_scalar("Test/Accuracy", test_acc, epoch)
 
+writer.close()
 print("✅ Training finished.")
 
-torch.save(model, "model_best_single_frame.pth")
+torch.save(model.state_dict(), "model_best_single_frame.pth")
 
 print("✅ Model saved.")
+
+results = {
+    "model": "Single Frame CNN",
+    "epochs": num_epochs,
+    "final_train_acc": train_acc,
+    "final_test_acc": test_acc,
+}
+
+with open("train_results_single.json", "w") as f:
+    json.dump(results, f, indent=4)
+print("✅ Results saved to train_results_single.json")

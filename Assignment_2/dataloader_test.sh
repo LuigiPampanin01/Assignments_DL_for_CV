@@ -17,7 +17,7 @@
 #BSUB -e OUTPUT_FILE_%J.err
 
 # Activate your virtual environment
-source /zhome/b4/e/214014/Documents/Python/Introduction_to_Deep_Learning_for_CV/venv_DL_CV/bin/activate
+source /zhome/b0/c/220061/dlcv_env/bin/activate
 
 # Run your Python script
-python /zhome/b4/e/214014/Documents/Python/Introduction_to_Deep_Learning_for_CV/Assignments_DL_for_CV/Assignment_2/datasets.py
+python /zhome/b0/c/220061/DLCV_Project2/datasets.py
