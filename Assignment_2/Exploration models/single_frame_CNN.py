@@ -30,11 +30,11 @@ transform = T.Compose([
 ])
 
 train_transform = T.Compose([
-    T.Resize((72, 72)),  # resize slightly larger for cropping
-    T.RandomCrop((64, 64)),  # random crop for spatial variation
-    T.RandomHorizontalFlip(p=0.5),  # mirror frames
-    T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05),  # lighting/color variation
-    T.RandomRotation(degrees=10),  # small random rotations
+    T.Resize((72, 72)),
+    T.RandomCrop((64, 64)),
+    T.RandomHorizontalFlip(p=0.5),
+    T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05),
+    T.RandomRotation(degrees=10),
     T.ToTensor(),
     T.Normalize(mean=[0.45, 0.45, 0.45], std=[0.225, 0.225, 0.225])
 ])
@@ -84,12 +84,19 @@ class Network(nn.Module):
             nn.Dropout(0.3),
             nn.Linear(256, num_classes)
         )
-
-    def forward(self, x):
+    def forward_features(self, x):
+        """
+        Returns the pooled feature vector before the fully connected layers.
+        Used for late fusion (FC concatenation).
+        """
         x = self.features(x)
-        x = self.gap(x)
-        x = torch.flatten(x, 1)
-        x = self.fc(x)
+        x = self.gap(x)             # global average pool
+        x = torch.flatten(x, 1)     # flatten to [B, 512]
+        return x
+    
+    def forward(self, x):
+        x = self.forward_features(x)  # get [B, 512]
+        x = self.fc(x)                # classifier
         return x
 
 model = Network(num_classes=10).to(device)

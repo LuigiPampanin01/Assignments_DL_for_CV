@@ -11,13 +11,13 @@ from datasets import FrameVideoDataset
 root_dir    = '/dtu/datasets1/02516/ufc10'
 num_classes = 10
 EPOCHS      = 20
-BATCH       = 32          # if OOM, try 16
+BATCH       = 32
 LR          = 3e-4
 WD          = 1e-4
 SAVE_AS     = "early_fusion.pt"
 LOG_JSON    = "train_results_early.json"
 IMG_SIZE    = 64
-T_FRAMES    = 10          # dataset provides 10 frames per clip
+T_FRAMES    = 10
 
 # ---------------- SEED (reproducibility) ----------------
 SEED = 0

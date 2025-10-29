@@ -6,19 +6,19 @@ import torch, torch.nn as nn, torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import transforms as T
 from datasets import FrameVideoDataset
-from single_frame_CNN import Network   # <-- re-use your CNN
+from single_frame_CNN import Network   # <-- re-use CNN
 from tqdm import tqdm
 
 # ---------------- CONFIG ----------------
 root_dir = '/dtu/datasets1/02516/ufc10'
 num_classes = 10
-T_FRAMES = 10                # your dataset has 10 frames/clip
-BATCH_SIZE = 4               # we’ll batch videos (see collate below)
+T_FRAMES = 10
+BATCH_SIZE = 4
 EPOCHS = 8
 LR = 1e-3
 WD = 1e-4
 USE_HEAD = True             # True = learnable fusion head; False = mean logits
-LOAD_SINGLE_WEIGHTS = "model_best_single_frame.pth"  # state_dict from your single-frame training
+LOAD_SINGLE_WEIGHTS = "model_best_single_frame.pth"  # state_dict from single-frame training
 SAVE_AS = "late_fusion.pt"
 LOG_JSON = "train_results_late.json"
 
@@ -50,7 +50,6 @@ def collate_video(batch):
             frames = torch.stack(frames, dim=0)  # [T, C, H, W]
         vids.append(frames)
         labels.append(y)
-    # pad not needed if all videos have same T (10)
     vids = torch.stack(vids, dim=0)             # [B, T, C, H, W]
     labels = torch.tensor(labels, dtype=torch.long)
     return vids, labels
@@ -60,14 +59,12 @@ val_loader   = DataLoader(valset,   batch_size=BATCH_SIZE, shuffle=False, num_wo
 test_loader  = DataLoader(testset,  batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True, collate_fn=collate_video)
 
 # ---------------- MODEL ----------------
-# Backbone = your single-frame classifier (per-frame logits)
+# Backbone = single-frame classifier (per-frame logits)
 backbone = Network(num_classes=num_classes).to(device)
-# load state_dict saved by your single_frame_CNN.py
+# load state_dict saved by single_frame_CNN.py
 state = torch.load(LOAD_SINGLE_WEIGHTS, map_location=device, weights_only=True)
 backbone.load_state_dict(state)
 
-# (Optional) freeze backbone for quick training:
-# for p in backbone.parameters(): p.requires_grad = False
 
 # Late fusion head (optional)
 if USE_HEAD:
@@ -85,7 +82,7 @@ def forward_video_batch(vidsBTCHW):
     """
     vidsBTCHW: [B, T, C, H, W]
     Run per-frame through backbone to get logits [B,T,num_classes],
-    then fuse across T (mean or head(mean)).
+    then fuse across T (mean or head(   mean)).
     """
     B, T, C, H, W = vidsBTCHW.shape
     vidsBTC = vidsBTCHW.view(B*T, C, H, W)             # flatten frames

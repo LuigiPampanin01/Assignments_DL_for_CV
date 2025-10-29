@@ -1,5 +1,5 @@
 # train_c3d_simple.py
-from datasets import FrameVideoDataset          # <- uses videos: [C, T, H, W]
+from datasets import FrameVideoDataset
 from torch.utils.data import DataLoader
 from torchvision import transforms as T
 import torch.nn as nn
@@ -11,10 +11,10 @@ import json
 
 writer = SummaryWriter(log_dir="runs/c3d_simple")
 
-import numpy as np  # NEW
+import numpy as np
 
 # --- temporal sampling config ---
-T_TARGET = 16  # the temporal length your 3D model will always see (use 10 if OOM)
+T_TARGET = 16  
 
 def temporal_jitter(x, t_target=16, max_stride=2, reverse_p=0.1):
     """
@@ -60,7 +60,7 @@ else:
 # ---------------- DATASETS ----------------
 root_dir = '/dtu/datasets1/02516/ufc10'
 img_size = 64
-batch_size = 16         # 3D needs a bit more memory; drop to 8 if OOM
+batch_size = 16
 num_epochs = 20
 num_classes = 10
 
@@ -78,7 +78,6 @@ eval_tf = T.Compose([
     T.Normalize([0.45, 0.45, 0.45], [0.225, 0.225, 0.225]),
 ])
 
-# IMPORTANT: use the video dataset (returns [C, T, H, W])
 trainset = FrameVideoDataset(root_dir=root_dir, split='train', transform=train_tf,   stack_frames=True)
 valset   = FrameVideoDataset(root_dir=root_dir, split='val',   transform=eval_tf,    stack_frames=True)
 testset  = FrameVideoDataset(root_dir=root_dir, split='test',  transform=eval_tf,    stack_frames=True)
@@ -87,7 +86,6 @@ train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=True,  num_wo
 val_loader   = DataLoader(valset,   batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
 test_loader  = DataLoader(testset,  batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
 
-# ---------------- SIMPLE 3D CNN (C3D-ish, VGG-style) ----------------
 class SimpleC3D(nn.Module):
     """
     Minimal 3D backbone:
@@ -121,7 +119,7 @@ class SimpleC3D(nn.Module):
             nn.MaxPool3d(kernel_size=(2,2,2), stride=(2,2,2)),   # Pool4
 
             block(256, 512),
-            nn.MaxPool3d(kernel_size=pool5, stride=pool5),       # Pool5 (safe for short clips)
+            nn.MaxPool3d(kernel_size=pool5, stride=pool5),       # Pool5
         )
 
         self.gap = nn.AdaptiveAvgPool3d((1,1,1))
@@ -175,7 +173,7 @@ for epoch in range(num_epochs):
     train_correct, train_loss_sum, seen = 0, 0.0, 0
     pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}")
     for data, target in pbar:
-        # === NEW: random temporal crop/jitter for training ===
+        # random temporal crop/jitter for training ===
         data = temporal_jitter(data, t_target=T_TARGET, max_stride=2, reverse_p=0.1)
 
         data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)

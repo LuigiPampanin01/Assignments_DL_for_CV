@@ -6,13 +6,13 @@ from torch.utils.data import DataLoader
 from torchvision import transforms as T
 
 from datasets import FrameVideoDataset
-from single_frame_CNN import Network  # your backbone (32,64,128,256,512)
+from single_frame_CNN import Network  # backbone (32,64,128,256,512)
 
 # ---------- Config ----------
 root_dir = '/dtu/datasets1/02516/ufc10'
 IMG_SIZE = 64
 T_FRAMES = 10
-BATCH_VID = 8    # for video loaders
+BATCH_VID = 8
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)

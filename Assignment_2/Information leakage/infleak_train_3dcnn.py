@@ -16,7 +16,7 @@ writer = SummaryWriter(log_dir="runs/c3d_simple")
 import numpy as np  # NEW
 
 # --- temporal sampling config ---
-T_TARGET = 16  # the temporal length your 3D model will always see (use 10 if OOM)
+T_TARGET = 16
 
 def temporal_jitter(x, t_target=16, max_stride=2, reverse_p=0.1):
     """
@@ -62,7 +62,7 @@ else:
 # ---------------- DATASETS ----------------
 root_dir = '/dtu/datasets1/02516/ucf101_noleakage'
 img_size = 64
-batch_size = 16         # 3D needs a bit more memory; drop to 8 if OOM
+batch_size = 16
 num_epochs = 20
 num_classes = 10
 
@@ -123,7 +123,7 @@ class SimpleC3D(nn.Module):
             nn.MaxPool3d(kernel_size=(2,2,2), stride=(2,2,2)),   # Pool4
 
             block(256, 512),
-            nn.MaxPool3d(kernel_size=pool5, stride=pool5),       # Pool5 (safe for short clips)
+            nn.MaxPool3d(kernel_size=pool5, stride=pool5),       # Pool5
         )
 
         self.gap = nn.AdaptiveAvgPool3d((1,1,1))
@@ -158,9 +158,7 @@ def evaluate(loader):
     model.eval()
     total_correct, total_loss, total = 0, 0.0, 0
     for data, target in loader:
-        # temporal center crop BEFORE sending to device
         data = temporal_center_crop(data, t_target=T_TARGET)
-
         data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)
         output = model(data)
         loss = criterion(output, target)
@@ -177,7 +175,6 @@ for epoch in range(num_epochs):
     train_correct, train_loss_sum, seen = 0, 0.0, 0
     pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}")
     for data, target in pbar:
-        # === NEW: random temporal crop/jitter for training ===
         data = temporal_jitter(data, t_target=T_TARGET, max_stride=2, reverse_p=0.1)
 
         data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)

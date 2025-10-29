@@ -159,3 +159,6 @@ with open(LOG_JSON, "w") as f:
         "test_acc": test_acc
     }, f, indent=4)
 print("Saved metrics to", LOG_JSON)
+os.makedirs("results", exist_ok=True)
+LOG_JSON = f"results/latefusion_{args.fusion}_{args.dataset}.json"
+SAVE_AS  = f"results/latefusion_{args.fusion}_{args.dataset}.pt"

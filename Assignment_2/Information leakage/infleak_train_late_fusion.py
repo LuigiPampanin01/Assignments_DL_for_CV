@@ -1,7 +1,6 @@
 # train_late_fusion.py
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import os, json, math
 from collections import defaultdict
 from typing import List
@@ -63,14 +62,11 @@ val_loader   = DataLoader(valset,   batch_size=BATCH_SIZE, shuffle=False, num_wo
 test_loader  = DataLoader(testset,  batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True, collate_fn=collate_video)
 
 # ---------------- MODEL ----------------
-# Backbone = your single-frame classifier (per-frame logits)
+# Backbone =  single-frame classifier (per-frame logits)
 backbone = Network(num_classes=num_classes).to(device)
-# load state_dict saved by your single_frame_CNN.py
+# load state_dict saved by single_frame_CNN.py
 state = torch.load(LOAD_SINGLE_WEIGHTS, map_location=device, weights_only=True)
 backbone.load_state_dict(state)
-
-# (Optional) freeze backbone for quick training:
-# for p in backbone.parameters(): p.requires_grad = False
 
 # Late fusion head (optional)
 if USE_HEAD:

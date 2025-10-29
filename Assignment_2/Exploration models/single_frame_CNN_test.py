@@ -18,8 +18,6 @@ transform = T.Compose([
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # -------------- LOAD MODEL ----------------
-#model = torch.load("model_complete.pth", map_location=device)
-#model.eval()
 
 model = Network(num_classes=10)   # parametry jak w treningu
 state = torch.load("model_best_single_frame.pth", map_location=device, weights_only=True)
