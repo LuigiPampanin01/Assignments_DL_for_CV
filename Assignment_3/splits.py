@@ -26,7 +26,7 @@ def main():
             print(f"[WARN] Missing annotation for {img_path.name}")
             missing_xml += 1
 
-    print(f"Images with annotation: {len(filenames)}")
+    print(f"Images with annotation: {len(valid_filenames)}")
     print(f"Images without annotation: {missing_xml}")
 
     # shuffle the dataset for randomness
