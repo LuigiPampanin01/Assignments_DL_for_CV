@@ -3,9 +3,11 @@ from datasets import FrameVideoDataset
 from torchvision import transforms as T
 import torch
 from tqdm import tqdm
+from single_frame_CNN import Network
 
 # -------------- CONFIG ----------------
-root_dir = '/work3/ppar/data/ucf101'
+root_dir = 'Assignment_2/ufc10'
+# root_dir = '/dtu/datasets1/02516/ucf101_noleakage'
 transform = T.Compose([
     T.Resize((64, 64)),
     T.ToTensor(),
@@ -15,15 +17,17 @@ transform = T.Compose([
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # -------------- LOAD MODEL ----------------
-model = torch.load("model_complete.pth", map_location=device)
+model = Network(num_classes=10).to(device)
+model.load_state_dict(torch.load("Assignment_2/model_best_single_frame.pth", map_location=device))
 model.eval()
 
 # -------------- LOAD VIDEO DATASET ----------------
-video_dataset = FrameVideoDataset(root_dir=root_dir, split='test', transform=transform, stack_frames=False)
+video_dataset = FrameVideoDataset(root_dir=root_dir, split='val', transform=transform, stack_frames=False)
 
 correct = 0
 total = len(video_dataset)
 
+print("Starting evaluation")
 # -------------- EVALUATE ----------------
 with torch.no_grad():
     for i in tqdm(range(total), desc="Video-level evaluation"):

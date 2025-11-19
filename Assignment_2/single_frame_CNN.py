@@ -5,43 +5,10 @@ import torch.nn as nn
 import torch
 import torch.optim as optim
 from tqdm import tqdm
+import matplotlib
+matplotlib.use("Agg")  # ✅ safe for HPC/headless jobs
+import matplotlib.pyplot as plt
 
-# ---------------- DEVICE SETUP ----------------
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-    print("✅ The code will run on NVIDIA GPU (CUDA).")
-elif torch.backends.mps.is_available():
-    device = torch.device("mps")
-    print("✅ The code will run on Apple Silicon GPU (MPS).")
-else:
-    device = torch.device("cpu")
-    print("⚠️ The code will run on CPU.")
-
-# ---------------- DATASETS ----------------
-root_dir = '/work3/ppar/data/ucf101'
-transform = T.Compose([
-    T.Resize((64, 64)),
-    T.ToTensor(),
-    T.Normalize(mean=[0.45, 0.45, 0.45], std=[0.225, 0.225, 0.225])
-])
-
-train_transform = T.Compose([
-    T.Resize((72, 72)),  # resize slightly larger for cropping
-    T.RandomCrop((64, 64)),  # random crop for spatial variation
-    T.RandomHorizontalFlip(p=0.5),  # mirror frames
-    T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05),  # lighting/color variation
-    T.RandomRotation(degrees=10),  # small random rotations
-    T.ToTensor(),
-    T.Normalize(mean=[0.45, 0.45, 0.45], std=[0.225, 0.225, 0.225])
-])
-
-trainset = FrameImageDataset(root_dir=root_dir, split='train', transform=train_transform)
-valset   = FrameImageDataset(root_dir=root_dir, split='val', transform=transform)
-testset  = FrameImageDataset(root_dir=root_dir, split='test', transform=transform)
-
-train_loader = DataLoader(trainset, batch_size=8, shuffle=True)
-val_loader   = DataLoader(valset, batch_size=8, shuffle=False)
-test_loader  = DataLoader(testset, batch_size=8, shuffle=False)
 
 # ---------------- MODEL ----------------
 class Network(nn.Module):
@@ -88,69 +55,134 @@ class Network(nn.Module):
         x = self.fc(x)
         return x
 
-model = Network(num_classes=10).to(device)
 
-# ---------------- OPTIMIZER & LOSS ----------------
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
+# ---------------- MAIN EXECUTION ----------------
+if __name__ == "__main__":
+    # ---------------- DEVICE SETUP ----------------
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print("✅ The code will run on NVIDIA GPU (CUDA).")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+        print("✅ The code will run on Apple Silicon GPU (MPS).")
+    else:
+        device = torch.device("cpu")
+        print("⚠️ The code will run on CPU.")
 
-# ---------------- TRAINING LOOP ----------------
-num_epochs = 20
+    # ---------------- DATASETS ----------------
+    root_dir = 'Assignment_2/ufc10'
+    # root_dir = '/dtu/datasets1/02516/ucf101_noleakage'
+    transform = T.Compose([
+        T.Resize((64, 64)),
+        T.ToTensor(),
+        T.Normalize(mean=[0.45, 0.45, 0.45], std=[0.225, 0.225, 0.225])
+    ])
 
-for epoch in range(num_epochs):
-    model.train()
-    train_correct = 0
-    train_loss = 0.0
+    train_transform = T.Compose([
+        T.Resize((72, 72)),
+        T.RandomCrop((64, 64)),
+        T.RandomHorizontalFlip(p=0.5),
+        T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05),
+        T.RandomRotation(degrees=10),
+        T.ToTensor(),
+        T.Normalize(mean=[0.45, 0.45, 0.45], std=[0.225, 0.225, 0.225])
+    ])
 
-    # TRAINING
-    for data, target in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
-        data, target = data.to(device), target.to(device)
-        optimizer.zero_grad()
+    trainset = FrameImageDataset(root_dir=root_dir, split='train', transform=train_transform)
+    valset   = FrameImageDataset(root_dir=root_dir, split='val', transform=transform)
+    testset  = FrameImageDataset(root_dir=root_dir, split='test', transform=transform)
 
-        output = model(data)
-        loss = criterion(output, target)
-        loss.backward()
-        optimizer.step()
+    train_loader = DataLoader(trainset, batch_size=8, shuffle=True)
+    val_loader   = DataLoader(valset, batch_size=8, shuffle=False)
+    test_loader  = DataLoader(testset, batch_size=8, shuffle=False)
 
-        # Metrics
-        train_loss += loss.item() * data.size(0)
-        predicted = output.argmax(1)
-        train_correct += (predicted == target).sum().item()
+    # ---------------- MODEL SETUP ----------------
+    model = Network(num_classes=10).to(device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
 
-    # ---------------- EVALUATION ----------------
-    model.eval()
-    test_correct = 0
-    test_loss = 0.0
-    incorrect_indices = []
+    # ---------------- TRACKING METRICS ----------------
+    train_acc_history, test_acc_history = [], []
+    train_loss_history, test_loss_history = [], []
 
-    with torch.no_grad():
-        for batch_idx, (data, target) in enumerate(test_loader):
+    # ---------------- TRAINING LOOP ----------------
+    num_epochs = 30
+
+    for epoch in range(num_epochs):
+        model.train()
+        train_correct = 0
+        train_loss = 0.0
+
+        for data, target in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
             data, target = data.to(device), target.to(device)
+            optimizer.zero_grad()
             output = model(data)
-
             loss = criterion(output, target)
-            test_loss += loss.item() * data.size(0)
+            loss.backward()
+            optimizer.step()
 
-            probs = torch.softmax(output, dim=1)
-            predicted = probs.argmax(1)
-            test_correct += (target == predicted).sum().item()
+            train_loss += loss.item() * data.size(0)
+            predicted = output.argmax(1)
+            train_correct += (predicted == target).sum().item()
 
-            incorrect = (predicted != target).nonzero(as_tuple=True)[0]
-            for i in incorrect:
-                incorrect_indices.append(batch_idx * test_loader.batch_size + i.item())
+        # ---------------- EVALUATION ----------------
+        model.eval()
+        test_correct = 0
+        test_loss = 0.0
 
-    # ---------------- METRICS ----------------
-    train_acc = train_correct / len(trainset)
-    test_acc = test_correct / len(testset)
-    train_loss /= len(trainset)
-    test_loss /= len(testset)
+        with torch.no_grad():
+            for data, target in test_loader:
+                data, target = data.to(device), target.to(device)
+                output = model(data)
+                loss = criterion(output, target)
+                test_loss += loss.item() * data.size(0)
+                predicted = output.argmax(1)
+                test_correct += (predicted == target).sum().item()
 
-    print(f"Epoch {epoch+1}/{num_epochs} "
-          f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc*100:.1f}% "
-          f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc*100:.1f}%")
+        # ---------------- METRICS ----------------
+        train_acc = train_correct / len(trainset)
+        test_acc = test_correct / len(testset)
+        train_loss /= len(trainset)
+        test_loss /= len(testset)
 
-print("✅ Training finished.")
+        train_acc_history.append(train_acc)
+        test_acc_history.append(test_acc)
+        train_loss_history.append(train_loss)
+        test_loss_history.append(test_loss)
 
-torch.save(model, "model_best_single_frame.pth")
+        print(f"Epoch {epoch+1}/{num_epochs} "
+              f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc*100:.1f}% "
+              f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc*100:.1f}%")
 
-print("✅ Model saved.")
+    print("✅ Training finished.")
+
+    # ---------------- PLOTS ----------------
+    plt.figure(figsize=(8,5))
+    plt.plot(range(1, num_epochs+1), train_acc_history, label='Train Accuracy', marker='o')
+    plt.plot(range(1, num_epochs+1), test_acc_history, label='Test Accuracy', marker='s')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.title('Train vs Test Accuracy')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("Assignment_2/accuracy_plot.png")
+    plt.close()
+
+    plt.figure(figsize=(8,5))
+    plt.plot(range(1, num_epochs+1), train_loss_history, label='Train Loss', marker='o')
+    plt.plot(range(1, num_epochs+1), test_loss_history, label='Test Loss', marker='s')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Train vs Test Loss')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("Assignment_2/loss_plot.png")
+    plt.close()
+
+    print("📊 Saved accuracy_plot.png and loss_plot.png to Assignment_2/")
+
+    # save model weights only (safer for reloading)
+    torch.save(model.state_dict(), "Assignment_2/model_best_single_frame.pth")
+    print("✅ Model weights saved.")
