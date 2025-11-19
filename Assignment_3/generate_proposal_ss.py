@@ -39,10 +39,9 @@ def process_image(filename, resize_to=400):
     img_path = IMG_DIR / filename
     out_path = OUT_DIR / f"{Path(filename).stem}_ss.npz"
 
-    # Skip if already processed
     if out_path.exists():
-        print(f"[SKIP] {filename}")
-        return
+        out_path.unlink()  # delete old file
+        print(f"[OVERWRITE] Removed old {out_path.name}")
 
     img = cv2.imread(str(img_path))
     if img is None:
@@ -72,7 +71,8 @@ def process_image(filename, resize_to=400):
 
     # Run Selective Search
     t0 = time.time()
-    rects = run_selective_search(img_resized, mode="fast", max_proposals=2000)
+    # rects = run_selective_search(img_resized, mode="fast", max_proposals=30) # this is faster but the other should be more accurate
+    rects = run_selective_search(img_resized, mode="quality", max_proposals=30) # not sure if we want to keep 30
     dt = time.time() - t0
 
     print(f"[SS] {filename}: {len(rects)} proposals in {dt:.2f}s")
