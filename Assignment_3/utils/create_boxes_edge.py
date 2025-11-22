@@ -5,7 +5,7 @@ from PIL import Image
 import numpy as np
 from visualize import visualize_single
 
-def box_proposal(image_path, N=50):
+def box_proposal_edge(image_path, N=50):
 
     # Load PIL → numpy float32 → normalized RGB
     img_pil = Image.open(image_path).convert("RGB")
@@ -35,8 +35,8 @@ def box_proposal(image_path, N=50):
 if __name__=="__main__":
 
     image_path = "/dtu/datasets1/02516/potholes/images/potholes1.png"
-    boxes = box_proposal(image_path)
+    boxes = box_proposal_edge(image_path)
 
-    visualize_single(image_path, boxes, save_dir="box_proposal.png")
+    visualize_single(image_path, boxes, save_dir="box_proposal_edge.png")
 
     print(boxes)
