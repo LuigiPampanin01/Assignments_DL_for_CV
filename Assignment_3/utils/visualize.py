@@ -4,7 +4,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-def visualize_single(image_path, boxes):
+def visualize_single(image_path, boxes, save_dir=None):
     """Display image with bounding boxes."""
 
     # Load image
@@ -32,13 +32,16 @@ def visualize_single(image_path, boxes):
 
     plt.title(os.path.basename(image_path))
     plt.axis("off")
-    plt.savefig(os.path.join("images", os.path.basename(image_path)))
+    
+    if save_dir is None:
+        plt.savefig(os.path.join("images", os.path.basename(image_path)))
+    else:
+        plt.savefig(save_dir)
 
 
 def visualize(path):
 
     xlm_files = os.listdir(os.path.join(path, "annotations"))
-
 
     for xlm in xlm_files:
 
