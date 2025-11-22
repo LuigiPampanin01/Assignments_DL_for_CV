@@ -5,7 +5,7 @@ from PIL import Image
 import numpy as np
 from visualize import visualize_single
 
-def box_proposal_edge(image_path, N=50):
+def box_proposal_edge(image_path, N=100):
 
     # Load PIL → numpy float32 → normalized RGB
     img_pil = Image.open(image_path).convert("RGB")
@@ -25,12 +25,16 @@ def box_proposal_edge(image_path, N=50):
     edges_nms = edge_detector.edgesNms(edges, orimap)
     boxes, scores = edge_boxes.getBoundingBoxes(edges_nms, orimap)
 
+    converted = []
+    for (x, y, w, h) in boxes:
+        converted.append((x, y, x + w, y + h))
+
     end = time.time()
     elapsed = end - start
 
-    print(f"EdgeBoxes processing time: {elapsed:.4f} seconds")
+    # print(f"EdgeBoxes processing time: {elapsed:.4f} seconds")
 
-    return boxes
+    return np.array(converted, dtype=np.float32)
 
 if __name__=="__main__":
 
@@ -38,5 +42,3 @@ if __name__=="__main__":
     boxes = box_proposal_edge(image_path)
 
     visualize_single(image_path, boxes, save_dir="box_proposal_edge.png")
-
-    print(boxes)
