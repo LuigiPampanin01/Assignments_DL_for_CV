@@ -71,7 +71,7 @@ if __name__=="__main__":
     path = "/dtu/datasets1/02516/potholes"
     k = 0.8
     max_num = 200
-    method = box_proposal_edge   # <-- FIXED (no parentheses)
+    method = box_proposal_edge   
 
     score = eval_method(path, method, k, max_num)
     print("Average detection rate:", score)

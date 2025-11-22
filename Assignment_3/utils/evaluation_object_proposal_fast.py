@@ -12,6 +12,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from visualize import read_content   # <-- your own function to read GT XML
+
 ############################################################
 # 1. Numba-Optimized IoU
 ############################################################
@@ -66,56 +67,6 @@ def compute_detection_rate_fast(true_boxes, proposal_boxes, k):
             detected += 1
 
     return detected / len(true_boxes)
-
-
-############################################################
-# 2. EdgeBoxes (converted to xyxy)
-############################################################
-
-def box_proposal_edge(image_path, N=50):
-    img_pil = Image.open(image_path).convert("RGB")
-    img = np.array(img_pil).astype(np.float32) / 255.0
-
-    edge_boxes = cv2.ximgproc.createEdgeBoxes()
-    edge_boxes.setMaxBoxes(N)
-    edge_detector = cv2.ximgproc.createStructuredEdgeDetection("model/model.yml.gz")
-
-    start = time.time()
-    edges = edge_detector.detectEdges(img)
-    orimap = edge_detector.computeOrientation(edges)
-    edges_nms = edge_detector.edgesNms(edges, orimap)
-    boxes, _ = edge_boxes.getBoundingBoxes(edges_nms, orimap)
-
-    # Convert (x,y,w,h) → (xmin,ymin,xmax,ymax)
-    converted = [(x, y, x + w, y + h) for (x, y, w, h) in boxes]
-
-    print(f"EdgeBoxes time: {time.time() - start:.3f}s")
-    return np.array(converted, dtype=np.float32)
-
-
-############################################################
-# 3. Selective Search (converted to xyxy)
-############################################################
-
-def box_proposal_ss(image_path, mode="fast", N=50):
-    img = np.array(Image.open(image_path).convert("RGB"), dtype=np.uint8)
-
-    ss = cv2.ximgproc.segmentation.createSelectiveSearchSegmentation()
-    ss.setBaseImage(img)
-
-    if mode == "fast":
-        ss.switchToSelectiveSearchFast()
-    else:
-        ss.switchToSelectiveSearchQuality()
-
-    start = time.time()
-    rects = ss.process()
-    rects = rects[:N]
-    print(f"Selective Search time: {time.time() - start:.3f}s")
-
-    converted = [(x, y, x + w, y + h) for (x, y, w, h) in rects]
-    return np.array(converted, dtype=np.float32)
-
 
 ############################################################
 # 4. Evaluation Function
