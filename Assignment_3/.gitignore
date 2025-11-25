@@ -1,3 +1,5 @@
 images/
 *.sh
 *.png
+dataset_proposal/
+utils/__pycache__/
