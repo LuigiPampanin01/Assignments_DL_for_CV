@@ -179,9 +179,9 @@ if __name__ == "__main__":
     # ----------------------------------------
     # Visualization
     # ----------------------------------------
-    plt.figure(figsize=(10,4))
-    for i in range(8):
-        plt.subplot(2,4,i+1)
+    plt.figure(figsize=(20,8))
+    for i in range(32):
+        plt.subplot(4,8,i+1)
         plt.imshow(F.to_pil_image(patches[i]))
         plt.title(f"Label: {labels[i].item()}")
         plt.axis("off")
