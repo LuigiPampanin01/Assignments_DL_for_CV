@@ -5,7 +5,7 @@ from PIL import Image
 import numpy as np
 from visualize import visualize_single
 
-def box_proposal_edge(image_path, N=100):
+def box_proposal_edge(image_path, N=1000):
 
     # Load PIL → numpy float32 → normalized RGB
     img_pil = Image.open(image_path).convert("RGB")
