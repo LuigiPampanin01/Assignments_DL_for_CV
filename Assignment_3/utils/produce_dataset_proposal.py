@@ -129,12 +129,12 @@ def generate_and_save_proposals(dataset_path, save_dir, method, k=0.5, max_num=1
 if __name__=="__main__":
 
     dataset_path = "/dtu/datasets1/02516/potholes"
-    save_dir = "dataset_proposal"
+    save_dir = "dataset_proposal2"
 
     generate_and_save_proposals(
     dataset_path=dataset_path,
     save_dir=save_dir,
     method=box_proposal_ss,
     k=0.5,
-    max_num=1000
+    max_num=100
 )
