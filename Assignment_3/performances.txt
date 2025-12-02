@@ -1,0 +1,97 @@
+======================================== 2:09 min
+EVALUATION CONFIGURATION
+NMS Mode: Manual (NumPy/CPU)
+Num Proposals per Image: 1000
+Confidence Threshold (Score): 0.50
+NMS IoU Threshold: 0.30
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.420
+Maximum Recall (Max Coverage): 0.695
+Precision at 50% Recall (P50): 0.443
+======================================== 2:11 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 1000
+Confidence Threshold (Score): 0.50
+NMS IoU Threshold: 0.30
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.420
+Maximum Recall (Max Coverage): 0.695
+Precision at 50% Recall (P50): 0.443
+
+
+
+
+======================================== 1:46 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 500
+Confidence Threshold (Score): 0.50
+NMS IoU Threshold: 0.30
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.393
+Maximum Recall (Max Coverage): 0.677
+Precision at 50% Recall (P50): 0.396
+======================================== 2:21 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 1500
+Confidence Threshold (Score): 0.50
+NMS IoU Threshold: 0.30
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.421
+Maximum Recall (Max Coverage): 0.701
+Precision at 50% Recall (P50): 0.429
+
+
+
+
+======================================== 2:10 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 1000
+Confidence Threshold (Score): 0.70
+NMS IoU Threshold: 0.30
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.393
+Maximum Recall (Max Coverage): 0.543
+Precision at 50% Recall (P50): 0.443
+======================================== 2:11 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 1000
+Confidence Threshold (Score): 0.30
+NMS IoU Threshold: 0.30
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.430
+Maximum Recall (Max Coverage): 0.756
+Precision at 50% Recall (P50): 0.443
+
+
+
+
+======================================== 2:12 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 1000
+Confidence Threshold (Score): 0.50
+NMS IoU Threshold: 0.50
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.407
+Maximum Recall (Max Coverage): 0.744
+Precision at 50% Recall (P50): 0.363
+======================================== 2:11 min
+EVALUATION CONFIGURATION
+NMS Mode: PyTorch (CUDA/GPU)
+Num Proposals per Image: 1000
+Confidence Threshold (Score): 0.50
+NMS IoU Threshold: 0.10
+Predictions collected. Total images: 67
+Average Precision (AP) @ IoU 0.50: 0.397
+Maximum Recall (Max Coverage): 0.567
+Precision at 50% Recall (P50): 0.408
+
+
+
+
+
